@@ -5,37 +5,52 @@ import org.json.*;
 public class UserInfo {
 	
 	private String id = null;
+	private String caseId = null;
 	private String reason = null;
+	private String proof = null;
 	private boolean banned = false;
+	private JSONObject raw = null;
 	
-	protected UserInfo(long id, String reason, boolean isBanned){
-		if(id < 0) {
-			throw new IllegalArgumentException("ID cannot be less than 0!");
+	protected UserInfo (JSONObject obj) {
+		this.raw = obj;
+		this.id = obj.getString("user_id");
+		this.banned = obj.getString("banned").equals("1");
+		if(this.banned) {
+			this.reason = obj.getString("reason");
+			this.proof = obj.getString("proof");
+			this.caseId = obj.getString("case_id");
 		}
-		this.id = Long.toString(id);
-		this.reason = reason;
-		this.banned = isBanned;
 	}
 	public boolean isBanned() {return this.banned;}
-	public String getRaw() {
+	public JSONObject getRaw() {
+		return this.raw;
+	}
+	public String getReason() {
 		if(!this.isBanned()) {
 			throw new IllegalStateException("Cannot get ban reason of a non-banned user");
 		}
-		return this.reason;
+		return reason;
 	}
-	public String getReason() {
-		return new JSONObject(getRaw()).getString("reason");
+	public String getCaseId() {
+		if(!this.isBanned()) {
+			throw new IllegalStateException("Cannot get case ID of a non-banned user");
+		}
+		return caseId;
 	}
-	public long getCaseId() {
-		return new JSONObject(getRaw()).getLong("case_id");
+	public long getCaseIdLong() {
+		if(!this.isBanned()) {
+			throw new IllegalStateException("Cannot get case ID of a non-banned user");
+		}
+		return Long.parseLong(this.caseId);
 	}
 	public String getProof() {
-		return new JSONObject(getRaw()).getString("proof");
+		return this.proof;
 	}
-	public long getIdLong() {return Long.parseLong(this.id);}
-	public String getId() {return this.id;}
+	public long getUserIdLong() {return Long.parseLong(this.id);}
+	public String getUserId() {return this.id;}
 	public String toString() {
 		String out = "User info:";
+		out += "\nUser ID: " + this.getUserId();
 		out += "\nBanned: " + this.isBanned();
 		if(this.isBanned()) {
 			out += "\nCase ID: " + this.getCaseId();

@@ -1,6 +1,8 @@
 package net.dbans.test;
 
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
 import net.dbans.DiscordBanAPI;
 import net.dbans.UserInfo;
 
@@ -10,11 +12,28 @@ public class DiscordBanAPITest {
 		DiscordBanAPI api = new DiscordBanAPI("token", true);
 		Scanner sc = new Scanner(System.in);
 		UserInfo info;
+		String input;
 		while(true) {
 			try {
 				System.out.print("ID: ");
-				info = api.checkUser(sc.nextLine());
-				System.out.println(info);
+				input = sc.nextLine();
+				if(input.contains(",")) {
+					ArrayList<String> ids = new ArrayList<>();
+					String[] split = input.replace(" ", "").split("\\,");
+					for(String s : split) {
+						ids.add(s);
+					}
+					List<UserInfo> results = api.checkUsers(ids);
+					for(UserInfo u : results) {
+						System.out.println("---------------------------------------------------");
+						System.out.println(u);
+					}
+					System.out.println("---------------------------------------------------");
+				}
+				else {
+					info = api.checkUser(input);
+					System.out.println(info);
+				}
 				Thread.sleep(500);
 			}
 			catch(Exception e) {
