@@ -9,7 +9,7 @@ import net.dbans.UserInfo;
 public class DiscordBanAPITest {
 	
 	public static void main(String[] args) {
-		DiscordBanAPI api = new DiscordBanAPI("token", true);
+		DiscordBanAPI api = new DiscordBanAPI(args[0], true);
 		Scanner sc = new Scanner(System.in);
 		UserInfo info;
 		String input;
