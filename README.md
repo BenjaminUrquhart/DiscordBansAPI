@@ -22,7 +22,7 @@ DiscordBanAPI api = new DiscordBanAPI("your token here", true);
 String id = "user id here";
 UserInfo info = api.checkUser(id);
 //Bulk checking
-List<UserInfo> ids = /*List of user IDs*/;
+List<String> ids = /*List of user IDs*/;
 List<UserInfo> list = api.checkUsers(ids);
 ```
 Note: if an exception is thrown the methods will return `null`
