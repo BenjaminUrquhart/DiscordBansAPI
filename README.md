@@ -33,6 +33,10 @@ if(info.isBanned()){ //returns true/false
   //do stuff
 }
 ```
+Getting user ID:
+```java
+System.out.println(info.getUserId() /* Replace with getUserIdLong() to return a long */
+```
 If you want to know why a user is banned:
 ```java
 if(info.isBanned()){
