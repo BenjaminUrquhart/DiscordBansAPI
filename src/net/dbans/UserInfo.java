@@ -55,8 +55,26 @@ public class UserInfo {
 		if(this.isBanned()) {
 			out += "\nCase ID: " + this.getCaseId();
 			out += "\nReason: " + this.getReason();
-			out += "\nProof:" + this.getProof();
+			out += "\nProof: " + this.getProof();
 		}
 		return out;
+	}
+	public boolean equals(Object obj) {
+		UserInfo u = null;
+		try {
+			u = (UserInfo)obj;
+		}
+		catch(Exception e) {
+			return false;
+		}
+		boolean isEqual = false;
+		isEqual = this.getUserIdLong() == u.getUserIdLong();
+		isEqual = this.isBanned() == u.isBanned();
+		if(this.isBanned() && u.isBanned()) {
+			isEqual = this.getCaseIdLong() == u.getCaseIdLong();
+			isEqual = this.getProof().equals(u.getProof());
+			isEqual = this.getReason().equals(u.getReason());
+		}
+		return isEqual;
 	}
 }

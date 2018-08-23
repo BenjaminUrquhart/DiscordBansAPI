@@ -24,6 +24,17 @@ public class DiscordBanAPI {
 		this.apiKey = token;
 		this.verbose = verbose;
 	}
+	private List<UserInfo> removeDupes(List<UserInfo> list){
+		List<UserInfo> out = new ArrayList<>();
+		boolean isDupe = false;
+		for(UserInfo u : list) {
+			if(out.contains(u)) {
+				continue;
+			}
+			out.add(u);
+		}
+		return out;
+	}
 	@SuppressWarnings("unchecked")
 	public List<UserInfo> checkUsers(List<String> users){
 		List<UserInfo> objects = new ArrayList<>();
@@ -37,7 +48,18 @@ public class DiscordBanAPI {
 				return objects;
 			}
 			if(users.size() > 99) {
-				throw new UnsupportedOperationException("Maximum amount of users to bulk check is 99, got " + users.size() + " IDs");
+				List<String> tmp = new ArrayList<>();
+				for(String id : users) {
+					tmp.add(id);
+					if(tmp.size() == 99) {
+						objects.addAll(this.checkUsers(tmp));
+						tmp = new ArrayList<>();
+					}
+				}
+				if(tmp.size() > 0) {
+					objects.addAll(this.checkUsers(tmp));
+				}
+				return removeDupes(objects);
 			}
 			for(String id : users) {
 				args += Long.parseLong(id) + "&user_id=";
@@ -66,7 +88,7 @@ public class DiscordBanAPI {
 	        for(Object obj : array) {
 	        	objects.add(new UserInfo(new JSONObject((java.util.HashMap<String, Object>)obj)));
 	        }
-	        return objects;
+	        return removeDupes(objects);
 		}
 		catch(NumberFormatException e) {
 			throw new IllegalArgumentException("User ID " + e.getMessage() + " is invalid: must be a long");

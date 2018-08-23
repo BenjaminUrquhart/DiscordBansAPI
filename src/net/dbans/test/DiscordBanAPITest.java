@@ -24,6 +24,7 @@ public class DiscordBanAPITest {
 						ids.add(s);
 					}
 					List<UserInfo> results = api.checkUsers(ids);
+					System.out.println(results.size() + " results");
 					for(UserInfo u : results) {
 						System.out.println("---------------------------------------------------");
 						System.out.println(u);
@@ -38,6 +39,9 @@ public class DiscordBanAPITest {
 			}
 			catch(Exception e) {
 				e.printStackTrace();
+				if(e instanceof java.util.NoSuchElementException) {
+					System.exit(0);
+				}
 			}
 		}
 	}
