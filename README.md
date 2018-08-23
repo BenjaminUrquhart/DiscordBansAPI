@@ -18,14 +18,14 @@ DiscordBanAPI api = new DiscordBanAPI("your token here", true);
 4. Make calls
 ```java
 //Single user checking
-//Returns null if an exception occurs
+//Returns null for all exceptions except for NumberFormatException, throws IllegalArgumentException in that case
 String id = "user id here";
 UserInfo info = api.checkUser(id);
 //Bulk checking
 List<UserInfo> ids = /*List of user IDs*/;
 List<UserInfo> list = api.checkUsers(ids);
 ```
-Note: if an exception is thrown 
+Note: if an exception is thrown the methods will return `null`
 
 You can see if a user is banned using `UserInfo.isBanned()`:
 ```java
