@@ -26,7 +26,6 @@ public class DiscordBanAPI {
 	}
 	private List<UserInfo> removeDupes(List<UserInfo> list){
 		List<UserInfo> out = new ArrayList<>();
-		boolean isDupe = false;
 		for(UserInfo u : list) {
 			if(out.contains(u)) {
 				continue;
