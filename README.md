@@ -26,7 +26,7 @@ UserInfo info = api.checkUser(id);
 List<String> ids = /*List of user IDs*/;
 List<UserInfo> list = api.checkUsers(ids);
 ```
-Note: if an exception is thrown the methods will return `null`
+Note: if an exception is thrown the methods will return `null` unless verbosity is enabled, then an exception will be thrown instead
 
 You can see if a user is banned using `UserInfo#isBanned()`:
 ```java
