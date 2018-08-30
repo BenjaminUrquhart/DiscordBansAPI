@@ -12,7 +12,7 @@ An example program is shown in src/net/dbans/test
 3. Create an API object 
 ```java
 DiscordBanAPI api = new DiscordBanAPI("your token here");
-//If you want t ocatch exceptions
+//If you want to catch exceptions...
 DiscordBanAPI api = new DiscordBanAPI("your token here", true);
 ```
 4. Make calls
