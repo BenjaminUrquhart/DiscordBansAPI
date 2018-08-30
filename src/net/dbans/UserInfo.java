@@ -61,7 +61,7 @@ public class UserInfo {
 	public String toString() {
 		String out = "User info:";
 		out += "\nUser ID: " + this.getUserId();
-		out += "\nBanned: " + this.isBanned();
+		out += "\nBanned: " + (this.isBanned() ? "yes" : "no");
 		if(this.isBanned()) {
 			String[] urls = this.getDirectProofUrls();
 			out += "\nCase ID: " + this.getCaseId();

@@ -21,9 +21,15 @@ public class DiscordBanAPI {
 	private boolean verbose = false;
 	
 	public DiscordBanAPI(String token) {
+		if(token == null || token.equals("")) {
+			throw new IllegalArgumentException("Token cannot be " + (token == null ? "null" : "blank"));
+		}
 		this.apiKey = token;
 	}
 	public DiscordBanAPI(String token, boolean verbose) {
+		if(token == null || token.equals("")) {
+			throw new IllegalArgumentException("Token cannot be " + (token == null ? "null" : "blank"));
+		}
 		this.apiKey = token;
 		this.verbose = verbose;
 	}
@@ -131,7 +137,7 @@ public class DiscordBanAPI {
 	        //System.out.println(sb);
 	        try {
 	        	if(new JSONObject(sb.toString()).has("error")) {
-	        		throw new IOException((String) new JSONObject(sb.toString()).get("error"));
+	        		throw new APIException((String) new JSONObject(sb.toString()).get("error"));
 	        	}
 	        }
 	        catch(JSONException e) {} //We got an array, no error
