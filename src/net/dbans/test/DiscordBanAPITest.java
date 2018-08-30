@@ -23,6 +23,7 @@ public class DiscordBanAPITest {
 					for(String s : split) {
 						ids.add(s);
 					}
+					System.out.println("Checking " + ids.size() + " users...");
 					List<UserInfo> results = api.checkUsers(ids);
 					System.out.println(results.size() + " results");
 					for(UserInfo u : results) {

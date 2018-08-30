@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.*;
+
+import net.dbans.exceptions.*;
+
 public class DiscordBanAPI {
 
 	private String apiKey = null;
@@ -34,9 +37,20 @@ public class DiscordBanAPI {
 		}
 		return out;
 	}
+	private List<String> removeDupeIds(List<String> ids){
+		List<String> out = new ArrayList<>();
+		for(String s : ids) {
+			if(out.contains(s)) {
+				continue;
+			}
+			out.add(s);
+		}
+		return out;
+	}
 	@SuppressWarnings("unchecked")
-	public List<UserInfo> checkUsers(List<String> users){
+	public List<UserInfo> checkUsers(List<String> list) throws Exception{
 		List<UserInfo> objects = new ArrayList<>();
+		List<String> users = removeDupeIds(list);
 		String args = "";
 		try {
 			if(users.size() == 0) {
@@ -47,12 +61,13 @@ public class DiscordBanAPI {
 				return objects;
 			}
 			if(users.size() > 99) {
+				//TODO: Stop using recursion and use a loop instead - also look into threading
 				List<String> tmp = new ArrayList<>();
 				for(String id : users) {
 					tmp.add(id);
 					if(tmp.size() == 99) {
 						objects.addAll(this.checkUsers(tmp));
-						tmp = new ArrayList<>();
+						tmp.clear();
 					}
 				}
 				if(tmp.size() > 0) {
@@ -78,7 +93,7 @@ public class DiscordBanAPI {
 	        //Hacks - probably should use a variable but idk
 	        try {
 	        	if(new JSONObject(sb.toString()).has("error")) {
-	        		throw new IOException((String) new JSONObject(sb.toString()).get("error"));
+	        		throw new APIException((String) new JSONObject(sb.toString()).get("error"));
 	        	}
 	        }
 	        catch(JSONException e) {} //We got an array, no error
@@ -94,12 +109,12 @@ public class DiscordBanAPI {
 		}
 		catch(Exception e) {
 			if(verbose) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 		return null;
 	}
-	public UserInfo checkUser(String user){
+	public UserInfo checkUser(String user) throws Exception{
 		try {
 			Long.parseLong(user);
 			URL url = new URL(String.format(URL, user));
@@ -128,7 +143,7 @@ public class DiscordBanAPI {
 		}
 		catch(Exception e) {
 			if(verbose) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 		return null;
