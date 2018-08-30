@@ -12,13 +12,14 @@ An example program is shown in src/net/dbans/test
 3. Create an API object 
 ```java
 DiscordBanAPI api = new DiscordBanAPI("your token here");
-//If you want stack traces to be printed...
+//If you want t ocatch exceptions
 DiscordBanAPI api = new DiscordBanAPI("your token here", true);
 ```
 4. Make calls
 ```java
 //Single user checking
 //Returns null for all exceptions except for NumberFormatException, throws IllegalArgumentException in that case
+//Throws all exceptions if verbosity is enabled
 String id = "user id here";
 UserInfo info = api.checkUser(id);
 //Bulk checking
@@ -27,7 +28,7 @@ List<UserInfo> list = api.checkUsers(ids);
 ```
 Note: if an exception is thrown the methods will return `null`
 
-You can see if a user is banned using `UserInfo.isBanned()`:
+You can see if a user is banned using `UserInfo#isBanned()`:
 ```java
 if(info.isBanned()){ //returns true/false
   //do stuff
@@ -35,7 +36,7 @@ if(info.isBanned()){ //returns true/false
 ```
 Getting user ID:
 ```java
-System.out.println(info.getUserId() /* Replace with getUserIdLong() to return a long */)
+System.out.println(info.getUserId());
 ```
 If you want to know why a user is banned:
 ```java
@@ -52,6 +53,15 @@ if(info.isBanned()){
 Getting case ID:
 ```java
 if(info.isBanned()){
-  System.out.println(info.getCaseId() /* Replace with getCaseIdLong() to return a long */); //If the user isn't banned, this will throw an IllegalStateException
+  System.out.println(info.getCaseId()); //If the user isn't banned, this will throw an IllegalStateException
+}
+```
+Getting Direct URLs to Proofs:
+```java
+if(info.isBanned()){
+  String[] urls = info.getDirectProofUrls();
+  for(String url: urls){
+    System.out.println(url);
+  }
 }
 ```
