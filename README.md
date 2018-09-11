@@ -65,3 +65,11 @@ if(info.isBanned()){
   }
 }
 ```
+# Standalone Client
+Executing the jarfile in a terminal window will give you a small interactive client.
+```
+java -jar path/to/jarfile.jar <token>
+```
+This is mainly for checking your token's validity. Just enter a user ID at the prompt to see the results.
+
+Multiple users can be checked by inputting a comma-separated string of user ids. Example: `123456789123456789,98765432109876543210`
