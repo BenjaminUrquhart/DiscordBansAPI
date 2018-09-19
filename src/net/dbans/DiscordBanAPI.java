@@ -1,7 +1,6 @@
 package net.dbans;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.HttpURLConnection;
@@ -24,7 +23,11 @@ public class DiscordBanAPI {
 		if(token == null || token.equals("")) {
 			throw new IllegalArgumentException("Token cannot be " + (token == null ? "null" : "blank"));
 		}
+		if(!this.isValidToken()) {
+			throw new IllegalArgumentException("Token invalid");
+		}
 		this.apiKey = token;
+		this.verbose = false;
 	}
 	public DiscordBanAPI(String token, boolean verbose) {
 		if(token == null || token.equals("")) {
@@ -32,6 +35,17 @@ public class DiscordBanAPI {
 		}
 		this.apiKey = token;
 		this.verbose = verbose;
+		if(!this.isValidToken()) {
+			throw new IllegalArgumentException("Token invalid");
+		}
+	}
+	private boolean isValidToken() {
+		try {
+			return (this.checkUser("123456789123456789") != null);
+		}
+		catch(Exception e) {
+			return false;
+		}
 	}
 	private List<UserInfo> removeDupes(List<UserInfo> list){
 		List<UserInfo> out = new ArrayList<>();
@@ -156,5 +170,8 @@ public class DiscordBanAPI {
 	}
 	public void setToken(String token) {
 		this.apiKey = token;
+	}
+	public String getToken() {
+		return this.apiKey;
 	}
 }
