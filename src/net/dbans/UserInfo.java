@@ -4,10 +4,7 @@ import org.json.*;
 
 public class UserInfo {
 	
-	private String id = null;
-	private String caseId = null;
-	private String reason = null;
-	private String proof = null;
+	private String id, caseId, reason, proof;
 	private boolean banned = false;
 	private JSONObject raw = null;
 	
@@ -24,6 +21,7 @@ public class UserInfo {
 		}
 	}
 	public boolean isBanned() {return this.banned;}
+	//TODO: rename to getJSONObject(), add getJSONString() method
 	public JSONObject getRaw() {
 		return this.raw;
 	}
