@@ -6,6 +6,7 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.json.*;
@@ -67,6 +68,30 @@ public class DiscordBanAPI {
 		}
 		return out;
 	}
+	private String request(String args) throws Exception{
+		URL url = new URL(String.format(URL, args));
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod("GET");
+		conn.setRequestProperty("Authorization", apiKey);
+		conn.setRequestProperty("User-Agent", useragent);
+		conn.connect();
+		Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+        StringBuilder sb = new StringBuilder();
+        for (int c; (c = in.read()) >= 0;){
+            sb.append((char)c);
+        }
+        return sb.toString();
+	}
+	
+	private void checkForErrors(String response) throws Exception{
+        try {
+        	if(new JSONObject(response).has("error")) {
+        		throw new APIException((String) new JSONObject(response).get("error"));
+        	}
+        }
+        catch(JSONException e) {} //We got an array, no error
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<UserInfo> checkUsers(List<String> list) throws Exception{
 		List<UserInfo> objects = new ArrayList<>();
@@ -99,30 +124,14 @@ public class DiscordBanAPI {
 				args += Long.parseLong(id) + "&user_id=";
 			}
 			args = args.substring(0, args.length() - "&user_id=".length());
-			URL url = new URL(String.format(URL, args));
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestMethod("GET");
-			conn.setRequestProperty("Authorization", apiKey);
-			conn.setRequestProperty("User-Agent", useragent);
-			conn.connect();
-			Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
-	        StringBuilder sb = new StringBuilder();
-	        for (int c; (c = in.read()) >= 0;){
-	            sb.append((char)c);
-	        }
-	        //Hacks - probably should use a variable but idk
-	        try {
-	        	if(new JSONObject(sb.toString()).has("error")) {
-	        		throw new APIException((String) new JSONObject(sb.toString()).get("error"));
-	        	}
-	        }
-	        catch(JSONException e) {} //We got an array, no error
-	        JSONArray arr = new JSONArray(sb.toString());
+			String response = request(args);
+			checkForErrors(response);
+	        JSONArray arr = new JSONArray(response);
 	        List<Object> array = arr.toList();
 	        for(Object obj : array) {
 	        	objects.add(new UserInfo(new JSONObject((java.util.HashMap<String, Object>)obj)));
 	        }
-	        return removeDupes(objects);
+	        return Collections.unmodifiableList(removeDupes(objects));
 		}
 		catch(NumberFormatException e) {
 			throw new IllegalArgumentException("User ID " + e.getMessage() + " is invalid: must be a long");
@@ -137,25 +146,9 @@ public class DiscordBanAPI {
 	public UserInfo checkUser(String user) throws Exception{
 		try {
 			Long.parseLong(user);
-			URL url = new URL(String.format(URL, user));
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestMethod("GET");
-			conn.setRequestProperty("Authorization", apiKey);
-			conn.setRequestProperty("User-Agent", useragent);
-			conn.connect();
-			Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
-	        StringBuilder sb = new StringBuilder();
-	        for (int c; (c = in.read()) >= 0;){
-	            sb.append((char)c);
-	        }
-	        //System.out.println(sb);
-	        try {
-	        	if(new JSONObject(sb.toString()).has("error")) {
-	        		throw new APIException((String) new JSONObject(sb.toString()).get("error"));
-	        	}
-	        }
-	        catch(JSONException e) {} //We got an array, no error
-	        JSONObject reason = (JSONObject) new JSONArray(sb.toString()).get(0);
+			String response = request(user);
+			checkForErrors(response);
+	        JSONObject reason = (JSONObject) new JSONArray(response).get(0);
 	        return new UserInfo(reason);
 		}
 		catch(NumberFormatException e) {

@@ -4,9 +4,12 @@ import org.json.*;
 
 public class UserInfo {
 	
-	private String id, caseId, reason, proof;
-	private boolean banned = false;
+	private String id = null;
+	private String caseId = null;
+	private String reason = null;
+	private String proof = null;
 	private JSONObject raw = null;
+	private boolean banned = false;
 	
 	public static String urlPrefix = "https://cdn.discordapp.com/attachments/437614369724039168/";
 	
@@ -21,7 +24,6 @@ public class UserInfo {
 		}
 	}
 	public boolean isBanned() {return this.banned;}
-	//TODO: rename to getJSONObject(), add getJSONString() method
 	public JSONObject getRaw() {
 		return this.raw;
 	}
@@ -83,8 +85,6 @@ public class UserInfo {
 		isEqual = this.isBanned() == u.isBanned();
 		if(this.isBanned() && u.isBanned()) {
 			isEqual = this.getCaseIdLong() == u.getCaseIdLong();
-			isEqual = this.getProof().equals(u.getProof());
-			isEqual = this.getReason().equals(u.getReason());
 		}
 		return isEqual;
 	}

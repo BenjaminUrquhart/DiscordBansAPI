@@ -8,6 +8,7 @@ import net.dbans.UserInfo;
 
 public class DiscordBanAPITest {
 	
+	@SuppressWarnings("resource")
 	public static void main(String[] args) {
 		DiscordBanAPI api = new DiscordBanAPI(args[0], true);
 		Scanner sc = new Scanner(System.in);
