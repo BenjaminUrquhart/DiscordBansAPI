@@ -1,3 +1,5 @@
+**DiscordList (and therefore DBans) no longer exists. This wrapper is defunct**
+
 # DiscordBansAPI
 Java library to interface with the Discord Bans API
 
